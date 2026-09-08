@@ -57,13 +57,9 @@ cd api-go   && go test ./...
 cd api-node && npm test
 ```
 
-## Notas
+## Producción
 
-- QR por Householder (estable y válido para matrices rectangulares), en su forma completa: Q de m×m, R de m×n, con A = Q·R.
-- Valores redondeados a 10 decimales al serializar (`ROUND_DECIMALS`) para no exponer ruido de punto flotante.
-- "Diagonal" se evalúa solo en matrices cuadradas y con tolerancia 1e-9.
-- Errores con formato único `{"error": {status, message, path}}`: 422 para entrada inválida, 502 si falla el servicio de estadísticas.
-- El enunciado menciona "rotación de la matriz" en la arquitectura pero pide factorización QR en la funcionalidad; se implementó QR.
+https://interseguro-challenge.duckdns.org — desplegado en AWS EC2 (t2.micro, us-east-2), nginx + Let's Encrypt.
 
 ## Despliegue
 
