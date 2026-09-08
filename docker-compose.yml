@@ -1,0 +1,41 @@
+services:
+  stats-api-node:
+    build: ./api-node
+    container_name: stats-api-node
+    environment:
+      PORT: 3000
+      JWT_SECRET: ${JWT_SECRET:-interChallSecret2000}
+      AUTH_ENABLED: "true"
+    ports:
+      - "3000:3000"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  qr-api-go:
+    build: ./api-go
+    container_name: qr-api-go
+    environment:
+      PORT: 8080
+      JWT_SECRET: ${JWT_SECRET:-interChallSecret2000}
+      JWT_TTL_MINUTES: 60
+      CLIENT_ID: ${CLIENT_ID:-interseguro}
+      CLIENT_SECRET: ${CLIENT_SECRET:-challenge2001}
+      # Comunicación HTTP entre servicios usando el DNS interno de Compose.
+      STATS_API_URL: http://stats-api-node:3000/api/v1/statistics
+      STATS_TIMEOUT_SECONDS: 10
+    ports:
+      - "8080:8080"
+    depends_on:
+      stats-api-node:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    container_name: qr-frontend
+    ports:
+      - "8081:80"
+    depends_on:
+      - qr-api-go

@@ -1,0 +1,6 @@
+node_modules/
+coverage/
+.env
+go.sum
+api-go/qr-api
+*.log
